@@ -23,8 +23,4 @@ class HistLinesCommand(sublime_plugin.TextCommand):
         # print(self.view.substr(self.view.line(0)))
         
         print(self.view.substr(sublime.Region(a=0,b=self.view.size())))
-        
-        # self.view.insert(edit, 0, "Hello World")
-        # self.view.insert(edit, 0, str(type(self.view)))
-        # self.view.insert(edit, 0, str(type(self.view.selection)))
-        # self.view.insert(edit, 0, str(self.view.selection))
+        self.view.insert(edit, self.view.size(), "\n\t\tHello World")
