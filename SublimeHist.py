@@ -15,7 +15,6 @@ import collections
 import sublime
 import sublime_plugin
 
-
 class HistLinesCommand(sublime_plugin.TextCommand):
     """
     Logic:
@@ -24,21 +23,26 @@ class HistLinesCommand(sublime_plugin.TextCommand):
     Open a new window, and print frequency counts as csv/tsv
     """
     def run(self, edit):
-        # Get full text from current file
+        ### Get full text from current file
         lines = self.view.substr(sublime.Region(a=0,b=self.view.size())).splitlines()
         
-        # Do frequency counting of lines
+        ### Do frequency counting of lines
         hist = {unique_line:0 for unique_line in set(lines)}
         for line in lines:
             hist[line] += 1
+        ### Sort by value
+        # hist = collections.OrderedDict(sorted(hist.items(), key=lambda i:i[1], reverse=True))
+        ### Sort by key
+        # hist = collections.OrderedDict(sorted(hist.items(), key=lambda i:i[0]))
         content = json.dumps(hist, indent=4)
-        
-        # Open a new window, and print frequency counts as csv/tsv
+        ### Sort by key inside json.dumps
+        # content = json.dumps(hist, indent=4, sort_keys=True)
+
+        ### Open a new window, and print frequency counts as csv/tsv
         scratch = self.view.window().new_file()
         scratch.set_scratch(True)
         scratch.set_syntax_file('Packages/JavaScript/JSON.sublime-syntax')
         scratch.run_command('insert_content', {'content': content})
-
 
 class InsertContentCommand(sublime_plugin.TextCommand):
     def run(self, edit, content):
