@@ -1,11 +1,11 @@
 import sublime
 import sublime_plugin
 
-s = {}
+# s = {}
 
-def plugin_loaded():
-    global s
-    s = sublime.load_settings('SublimeHist.sublime-settings')
+# def plugin_loaded():
+#     global s
+#     s = sublime.load_settings('SublimeHist.sublime-settings')
 
 class HistLinesCommand(sublime_plugin.TextCommand):
     """
