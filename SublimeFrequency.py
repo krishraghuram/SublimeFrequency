@@ -21,10 +21,16 @@ class LineFrequencyCommand(sublime_plugin.TextCommand):
         lines = self.view.substr(sublime.Region(a=0,b=self.view.size())).splitlines()
         
         ### Do frequency counting of lines
-        hist = {unique_line:0 for unique_line in set(lines)}
+        freq = {unique_line:0 for unique_line in set(lines)}
         for line in lines:
-            hist[line] += 1
-        content = json.dumps(hist, indent=4)
+            freq[line] += 1
+        ### Sort by value
+        # freq = collections.OrderedDict(sorted(freq.items(), key=lambda i:i[1], reverse=True))
+        ### Sort by key
+        # freq = collections.OrderedDict(sorted(freq.items(), key=lambda i:i[0]))
+        content = json.dumps(freq, indent=4)
+        ### Sort by key inside json.dumps
+        # content = json.dumps(freq, indent=4, sort_keys=True)
 
         ### Open a new window, and print frequency counts as csv/tsv
         scratch = self.view.window().new_file()
