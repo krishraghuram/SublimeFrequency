@@ -1,8 +1,8 @@
 """
-Sublime command to print frequency of lines
+Sublime command to print frequency of lines (and words)
 
 TODO:
-* Add commands for separators like "," and "\t"
+* Add commands for separators like "," and " " and "\t"
 * Allow arbitrary separators
 * Sort JSON output by key (to make it easier for user to quickly lookup a word/line)
 * Sort JSON output by value (to easily see which words/lines are occuring most)
@@ -15,13 +15,7 @@ import collections
 import sublime
 import sublime_plugin
 
-class HistLinesCommand(sublime_plugin.TextCommand):
-    """
-    Logic:
-    Get full text from current file
-    Do frequency counting of lines
-    Open a new window, and print frequency counts as csv/tsv
-    """
+class LineFrequencyCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         ### Get full text from current file
         lines = self.view.substr(sublime.Region(a=0,b=self.view.size())).splitlines()
@@ -30,13 +24,7 @@ class HistLinesCommand(sublime_plugin.TextCommand):
         hist = {unique_line:0 for unique_line in set(lines)}
         for line in lines:
             hist[line] += 1
-        ### Sort by value
-        # hist = collections.OrderedDict(sorted(hist.items(), key=lambda i:i[1], reverse=True))
-        ### Sort by key
-        # hist = collections.OrderedDict(sorted(hist.items(), key=lambda i:i[0]))
         content = json.dumps(hist, indent=4)
-        ### Sort by key inside json.dumps
-        # content = json.dumps(hist, indent=4, sort_keys=True)
 
         ### Open a new window, and print frequency counts as csv/tsv
         scratch = self.view.window().new_file()
