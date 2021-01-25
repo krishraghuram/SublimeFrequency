@@ -1,6 +1,11 @@
 # Readme.md
 
 ```
+rsync -azP ../SublimeHist /home/raghuram/.config/sublime-text-3/Packages
+while true; do date && rsync -azP ../SublimeHist /home/raghuram/.config/sublime-text-3/Packages && sleep 3; done
+```
+
+```
  1939  rsync -azP . /home/raghuram/Workspace/
  1940  ls ~/Workspace/ -ltr
  1941  rsync -azP ./ /home/raghuram/Workspace/

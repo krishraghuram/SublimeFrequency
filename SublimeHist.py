@@ -1,11 +1,20 @@
+"""
+Sublime command to print frequency of lines
+
+TODO:
+* Add commands for separators like "," and "\t"
+* Allow arbitrary separators
+* Sort JSON output by key (to make it easier for user to quickly lookup a word/line)
+* Sort JSON output by value (to easily see which words/lines are occuring most)
+"""
+
+import json
+import pprint
+import collections
+
 import sublime
 import sublime_plugin
 
-# s = {}
-
-# def plugin_loaded():
-#     global s
-#     s = sublime.load_settings('SublimeHist.sublime-settings')
 
 class HistLinesCommand(sublime_plugin.TextCommand):
     """
@@ -15,12 +24,22 @@ class HistLinesCommand(sublime_plugin.TextCommand):
     Open a new window, and print frequency counts as csv/tsv
     """
     def run(self, edit):
-        # print(vars(self.view.selection))
-        # print(str(self.view.selection))
+        # Get full text from current file
+        lines = self.view.substr(sublime.Region(a=0,b=self.view.size())).splitlines()
         
-        # print(self.view.substr(0))
-        # print(self.view.line(0))
-        # print(self.view.substr(self.view.line(0)))
+        # Do frequency counting of lines
+        hist = {unique_line:0 for unique_line in set(lines)}
+        for line in lines:
+            hist[line] += 1
+        content = json.dumps(hist, indent=4)
         
-        print(self.view.substr(sublime.Region(a=0,b=self.view.size())))
-        self.view.insert(edit, self.view.size(), "\n\t\tHello World")
+        # Open a new window, and print frequency counts as csv/tsv
+        scratch = self.view.window().new_file()
+        scratch.set_scratch(True)
+        scratch.set_syntax_file('Packages/JavaScript/JSON.sublime-syntax')
+        scratch.run_command('insert_content', {'content': content})
+
+
+class InsertContentCommand(sublime_plugin.TextCommand):
+    def run(self, edit, content):
+        self.view.insert(edit, 0, content)
