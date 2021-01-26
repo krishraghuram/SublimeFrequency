@@ -12,9 +12,18 @@ import sublime_plugin
 
 
 class LineFrequencyCommand(sublime_plugin.TextCommand):
+    def get_content(self):
+        """
+        Return the content of current selection(s), or the content of the current document
+        """
+        content = "".join([self.view.substr(region) for region in self.view.sel()])
+        if content == "":
+            content = self.view.substr(sublime.Region(a=0,b=self.view.size()))
+        return content
+
     def run(self, edit):
-        ### Get full text from current file
-        lines = self.view.substr(sublime.Region(a=0,b=self.view.size())).splitlines()
+        ### Get selected/full text from current file, and split into lines
+        lines = self.get_content().splitlines()
         
         ### Do frequency counting of lines
         freq = {}
