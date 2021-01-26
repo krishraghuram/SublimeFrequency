@@ -18,3 +18,7 @@ ram
     "ram": 2
 }
 ```
+
+## Installation
+
+**To be added after adding the package to https://packagecontrol.io/**
